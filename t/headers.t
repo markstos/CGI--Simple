@@ -37,3 +37,9 @@ like($@,qr/contains a newline/,'redirect with unknown header with CRLF embedded 
 eval { $cgi->redirect( $cgi->crlf.$cgi->crlf."Content-Type: text/html") };
 like($@,qr/contains a newline/,'redirect with leading newlines blows up');
 
+{
+    my $cgi = CGI::Simple->new('t=bogus%0A%0A<html>');
+    my $out;
+    eval { $out = $cgi->redirect( $cgi->param('t') ) };
+    like($@,qr/contains a newline/, "redirect does not allow double-newline injection");
+}

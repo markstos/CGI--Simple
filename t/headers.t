@@ -16,29 +16,24 @@ my $cgi = CGI::Simple->new;
 like $cgi->header( -type => "text/html" ),
     qr#Type: text/html#, 'known header, basic case: type => "text/html"';
 
-eval { like $cgi->header( -type => "text/html".$cgi->crlf."evil: stuff" ),
-    qr#Type: text/html evil: stuff#, 'known header'; };
+eval { $cgi->header( -type => "text/html".$cgi->crlf."evil: stuff" ) };
 like($@,qr/contains a newline/,'invalid header blows up');
 
 like $cgi->header( -type => "text/html".$cgi->crlf." evil: stuff " ),
     qr#Content-Type: text/html evil: stuff#, 'known header, with leading and trailing whitespace on the continuation line';
 
-eval { like $cgi->header( -foobar => "text/html".$cgi->crlf."evil: stuff" ),
-    qr#Foobar: text/htmlevil: stuff#, 'unknown header'; };
+eval { $cgi->header( -foobar => "text/html".$cgi->crlf."evil: stuff" ) };
 like($@,qr/contains a newline/,'unknown header with CRLF embedded blows up');
 
 like $cgi->header( -foobar => "Content-type: evil/header" ),
     qr#^Foobar: Content-type: evil/header#m, 'unknown header with leading newlines';
 
-eval { like $cgi->redirect( -type => "text/html".$cgi->crlf."evil: stuff" ),
-    qr#Type: text/htmlevil: stuff#, 'redirect w/ known header'; };
+eval { $cgi->redirect( -type => "text/html".$cgi->crlf."evil: stuff" ) };
 like($@,qr/contains a newline/,'redirect with known header with CRLF embedded blows up');
 
-eval { like $cgi->redirect( -foobar => "text/html".$cgi->crlf."evil: stuff" ),
-    qr#Foobar: text/htmlevil: stuff#, 'redirect w/ unknown header'; };
+eval { $cgi->redirect( -foobar => "text/html".$cgi->crlf."evil: stuff" ) };
 like($@,qr/contains a newline/,'redirect with unknown header with CRLF embedded blows up');
 
-eval { like $cgi->redirect( $cgi->crlf.$cgi->crlf."Content-Type: text/html"),
-    qr#Location: Content-Type#, 'redirect w/ leading newline '; };
+eval { $cgi->redirect( $cgi->crlf.$cgi->crlf."Content-Type: text/html") };
 like($@,qr/contains a newline/,'redirect with leading newlines blows up');
 

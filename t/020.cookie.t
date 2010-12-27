@@ -1,8 +1,6 @@
-# This is the original cookie.t file distributed with CGI.pm 2.78
-# The only modification is to change CGI::Cookie to CGI::Simple::Cookie
-# whenever it appears
+# This file was forked from the cookie.t file distributed with CGI.pm 2.78
 
-use Test::More tests => 93;
+use Test::More tests => 94;
 use strict;
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
@@ -142,6 +140,11 @@ my @test_cookie = (
   is( $result{bar}, 'yes%2C%20a%20phrase', "cookie bar is correct" );
   is( $result{baz}, '%5Ewibble',           "cookie baz is correct" );
   is( $result{qux}, '%27',                 "cookie qux is correct" );
+
+  $ENV{COOKIE} = '$Version=1; foo; $Path="/test"';
+  %result = CGI::Simple::Cookie->raw_fetch();
+  is($result{foo}, '', 'no value translates to empty string');
+
 }
 
 #-----------------------------------------------------------------------------

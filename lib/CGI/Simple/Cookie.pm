@@ -56,7 +56,7 @@ sub raw_fetch {
   my $raw_cookie = $ENV{HTTP_COOKIE} || $ENV{COOKIE};
   return () unless $raw_cookie;
   my %results;
-  my @pairs = split "; ?", $raw_cookie;
+  my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
     $pair =~ s/^\s+|\s+$//;    # trim leading trailing whitespace
     my ( $key, $value ) = split "=", $pair;

@@ -58,7 +58,7 @@ sub raw_fetch {
   my %results;
   my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
-    $pair =~ s/^\s+|\s+$//;    # trim leading trailing whitespace
+    $pair =~ s/^\s+|\s+$//g;    # trim leading trailing whitespace
     my ( $key, $value ) = split "=", $pair;
 
     # fixed bug that does not allow 0 as a cookie value thanks Jose Mico

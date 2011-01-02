@@ -9,7 +9,7 @@ BEGIN {
   *CORE::GLOBAL::time = sub { 100 };
 }
 
-use Test::More tests => 98;
+use Test::More tests => 102;
 use strict;
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
@@ -55,6 +55,16 @@ my @test_cookie = (
     [ 1, 2, '' ],
     "multiple values are supported including empty values."
   );
+
+  my @array   = CGI::Simple::Cookie->parse('');
+  my $scalar  = CGI::Simple::Cookie->parse('');
+  is_deeply(\@array, [], " parse('') returns an empty array   in list context   (undocumented)");
+  is_deeply($scalar, {}, " parse('') returns an empty hashref in scalar context (undocumented)");
+
+  my @array   = CGI::Simple::Cookie->parse(undef);
+  my $scalar  = CGI::Simple::Cookie->parse(undef);
+  is_deeply(\@array, [], " parse(undef) returns an empty array   in list context   (undocumented)");
+  is_deeply($scalar, {}, " parse(undef) returns an empty hashref in scalar context (undocumented)");
 }
 
 #-----------------------------------------------------------------------------

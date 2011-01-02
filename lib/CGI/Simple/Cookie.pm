@@ -20,10 +20,9 @@ use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;
 # fetch a list of cookies from the environment and return as a hash.
 # the cookies are parsed as normal escaped URL data.
 sub fetch {
-  my $self = shift;
-  my $raw_cookie = $ENV{HTTP_COOKIE} || $ENV{COOKIE};
-  return unless $raw_cookie;
-  return $self->parse( $raw_cookie );
+    my $class = shift;
+    my $raw_cookie = get_raw_cookie(@_) or return;
+    return $class->parse($raw_cookie);
 }
 
 sub parse {
@@ -54,8 +53,7 @@ sub parse {
 # fetch a list of cookies from the environment and return as a hash.
 # the cookie values are not unescaped or altered in any way.
 sub raw_fetch {
-  my $raw_cookie = $ENV{HTTP_COOKIE} || $ENV{COOKIE};
-  return () unless $raw_cookie;
+  my $raw_cookie = get_raw_cookie(@_) or return;
   my %results;
   my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
@@ -66,6 +64,10 @@ sub raw_fetch {
     $results{$key} = $value;
   }
   return wantarray ? %results : \%results;
+}
+
+sub get_raw_cookie {
+  return $ENV{HTTP_COOKIE} || $ENV{COOKIE};
 }
 
 sub new {

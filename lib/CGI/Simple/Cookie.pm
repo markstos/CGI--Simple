@@ -22,7 +22,7 @@ use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;
 sub fetch {
   my $self = shift;
   my $raw_cookie = $ENV{HTTP_COOKIE} || $ENV{COOKIE};
-  return () unless $raw_cookie;
+  return unless $raw_cookie;
   return $self->parse( $raw_cookie );
 }
 

@@ -27,7 +27,8 @@ sub fetch {
 
 sub parse {
   my ( $self, $raw_cookie ) = @_;
-  return unless $raw_cookie;
+  return wantarray ? () : {} unless $raw_cookie;
+
   my %results;
   my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
@@ -384,6 +385,9 @@ form using the parse() class method:
 
        $COOKIES = `cat /usr/tmp/Cookie_stash`;
        %cookies = CGI::Simple::Cookie->parse($COOKIES);
+
+If the value passed to parse() is undefined, an empty array will returned in
+list contact, and an empty hashref will be returned in scalar context.
 
 =head2 Manipulating Cookies
 

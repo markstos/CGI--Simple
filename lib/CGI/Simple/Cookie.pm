@@ -61,8 +61,6 @@ sub raw_fetch {
     $pair =~ s/^\s+|\s+$//g;    # trim leading trailing whitespace
     my ( $key, $value ) = split "=", $pair;
 
-    # fixed bug that does not allow 0 as a cookie value thanks Jose Mico
-    # $value ||= 0;
     $value = defined $value ? $value : '';
     $results{$key} = $value;
   }

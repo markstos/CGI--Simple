@@ -1,7 +1,7 @@
 package CGI::Simple::Util;
 use strict;
 use vars qw( $VERSION @EXPORT_OK @ISA $UTIL );
-$VERSION = '1.113';
+$VERSION = '1.114';
 require Exporter;
 @ISA       = qw( Exporter );
 @EXPORT_OK = qw(
@@ -115,7 +115,8 @@ sub _expire_calc {
   else {
     return $time;
   }
-  return ( time + $offset );
+  my $cur_time = time;
+  return ( $cur_time + $offset );
 }
 
 sub escapeHTML {

@@ -1,6 +1,6 @@
 package CGI::Simple;
 
-require 5.004;
+require 5.006001;
 
 # this module is both strict (and warnings) compliant, but they are only used
 # in testing as they add an unnecessary compile time overhead in production.
@@ -13,7 +13,7 @@ use vars qw(
  $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.113";
+$VERSION = "1.114";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -1000,24 +1000,26 @@ sub header {
     $type, $status,  $cookie,     $target, $expires,
     $nph,  $charset, $attachment, $p3p,    @other
    ) {
-        if (defined $header) {
-            # From RFC 822:
-            # Unfolding  is  accomplished  by regarding   CRLF   immediately
-            # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
-            $header =~ s/$CRLF(\s)/$1/g;
+    if ( defined $header ) {
+      # From RFC 822:
+      # Unfolding  is  accomplished  by regarding   CRLF   immediately
+      # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
+      $header =~ s/$CRLF(\s)/$1/g;
 
-            # All other uses of newlines are invalid input. 
-            if ($header =~ m/$CRLF|\015|\012/) {
-                # shorten very long values in the diagnostic
-                $header = substr($header,0,72).'...' if (length $header > 72);
-                die "Invalid header value contains a newline not followed by whitespace: $header";
-            }
-        } 
+      # All other uses of newlines are invalid input.
+      if ( $header =~ m/$CRLF/ ) {
+        # shorten very long values in the diagnostic
+        $header = substr( $header, 0, 72 ) . '...'
+         if ( length $header > 72 );
+        die
+         "Invalid header value contains a newline not followed by whitespace: $header";
+      }
+    }
   }
 
   $nph ||= $self->{'.globals'}->{'NPH'};
   $charset = $self->charset( $charset )
-   ;                  # get charset (and set new charset if supplied)
+   ;    # get charset (and set new charset if supplied)
    # rearrange() was designed for the HTML portion, so we need to fix it up a little.
 
   for ( @other ) {
@@ -1071,7 +1073,6 @@ sub header {
    if $attachment;
   push @header, @other;
   push @header, "Content-Type: $type" if $type;
-  my $CRLF = $self->crlf;
   my $header = join $CRLF, @header;
   $header .= $CRLF . $CRLF;    # add the statutory two CRLFs
 
@@ -1134,12 +1135,12 @@ sub multipart_init {
   my ( $self, @p ) = @_;
   use CGI::Simple::Util qw(rearrange);
   my ( $boundary, @other ) = rearrange( ['BOUNDARY'], @p );
-  if (!$boundary) {
-      $boundary = '------- =_';
-      my @chrs = ('0'..'9', 'A'..'Z', 'a'..'z');
-      for (1..17) {
-          $boundary .= $chrs[rand(scalar @chrs)];
-      }
+  if ( !$boundary ) {
+    $boundary = '------- =_';
+    my @chrs = ( '0' .. '9', 'A' .. 'Z', 'a' .. 'z' );
+    for ( 1 .. 17 ) {
+      $boundary .= $chrs[ rand( scalar @chrs ) ];
+    }
   }
 
   my $CRLF = $self->crlf;    # get CRLF sequence
@@ -1486,7 +1487,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.113.
+This document describes CGI::Simple version 1.114.
 
 =head1 SYNOPSIS
 
@@ -3919,7 +3920,7 @@ tommyw, grinder, Jaap, vek, erasei, jlongino and strider_corinth
 Thanks for patches to:
 
 Ewan Edwards, Joshua N Pritikin, Mike Barry, Michael Nachbaur, Chris
-Williams, Mark Stosberg, Krasimir Berov
+Williams, Mark Stosberg, Krasimir Berov, Yamada Masahiro
 
 =head1 LICENCE AND COPYRIGHT
 

@@ -1,8 +1,15 @@
-# This is the original cookie.t file distributed with CGI.pm 2.78
-# The only modification is to change CGI::Cookie to CGI::Simple::Cookie
-# whenever it appears
+# This was forked from the original cookie.t file distributed with CGI.pm 2.78
+# Originally, only modification is to change CGI::Cookie to CGI::Simple::Cookie
+# whenever it appeared. Since then the tests suites for CGI.pm and CGI::Simple
+# have not been kept in sync.
 
-use Test::More tests => 93;
+# to have a consistent baseline, we nail the current time
+# to 100 seconds after the epoch
+BEGIN {
+  *CORE::GLOBAL::time = sub { 100 };
+}
+
+use Test::More tests => 98;
 use strict;
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
@@ -390,3 +397,33 @@ my @test_cookie = (
   ok( !$c->httponly( 0 ), 'httponly attribute is cleared' );
   ok( !$c->httponly,      'httponly attribute is cleared' );
 }
+
+#----------------------------------------------------------------------------
+# Max-age
+#----------------------------------------------------------------------------
+
+MAX_AGE: {
+  {
+    my $cookie = CGI::Simple::Cookie->new(
+      -name      => 'a',
+      value      => 'b',
+      '-expires' => 'now',
+    );
+    is $cookie->expires, 'Thu, 01-Jan-1970 00:01:40 GMT';
+    is $cookie->max_age => undef,
+     'max-age is undefined when setting expires';
+  }
+
+  {
+    my $cookie
+     = CGI::Simple::Cookie->new( -name => 'a', 'value' => 'b' );
+    $cookie->max_age( '+4d' );
+
+    is $cookie->expires, undef, 'expires is undef when setting max_age';
+    is $cookie->max_age => 4 * 24 * 60 * 60, 'setting via max-age';
+
+    $cookie->max_age( '113' );
+    is $cookie->max_age => 13, 'max_age(num) as delta';
+  }
+}
+

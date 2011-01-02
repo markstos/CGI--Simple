@@ -945,16 +945,19 @@ $q = CGI::Simple->new;
 $sv = $q->multipart_init();
 like(
   $sv,
-  qr|Content-Type: multipart/x-mixed-replace;boundary="------- =.*"|,
+  qr|Content-Type: multipart/x-mixed-replace;boundary="------- =_[a-zA-Z0-9]{17}"|,
   'multipart_init(), 1'
 );
-like( $sv, qr/--------- =.*$CRLF/, 'multipart_init(), 2' );
+like( $sv, qr/--------- =_[a-zA-Z0-9]{17}$CRLF/,
+  'multipart_init(), 2' );
 $sv = $q->multipart_init( 'this_is_the_boundary' );
 like( $sv, qr/boundary="this_is_the_boundary"/, 'multipart_init(), 3' );
 {
-    my $sv1 = $q->multipart_init;
-    my $sv2 = $q->multipart_init;
-    isnt($sv1,$sv2,"due to random boundaries, multiple calls produce different results");
+  my $sv1 = $q->multipart_init;
+  my $sv2 = $q->multipart_init;
+  isnt( $sv1, $sv2,
+    "due to random boundaries, multiple calls produce different results"
+  );
 }
 $sv = $q->multipart_init( -boundary => 'this_is_another_boundary' );
 like(

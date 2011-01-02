@@ -11,6 +11,8 @@ package CGI::Simple::Cookie;
 # Interface remains identical and passes all original CGI::Cookie tests
 
 use strict;
+use warnings;
+
 our $VERSION = '1.114';
 use CGI::Simple::Util qw(rearrange unescape escape);
 use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;

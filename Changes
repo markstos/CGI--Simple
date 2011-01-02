@@ -243,4 +243,5 @@ Revision history for Perl extension CGI::Simple.
         now documented. The previous behavior was undocumented and differed from
         CGI.pm ( Mark Stosberg ) 
 
-
+      - Document in the compatibility section that CGI::Simple::Cookie does not  
+        include the bake() method from CGI::Cookie. ( Mark Stosberg )  

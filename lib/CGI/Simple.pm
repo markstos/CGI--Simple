@@ -3438,8 +3438,9 @@ There are 4 modules in this distribution:
 
 Simple.pm is the core module that provide all the essential functionality.
 Cookie.pm is a shortened rehash of the CGI.pm module of the same name
-which supplies the required cookie functionality. Util.pm has been recoded to
-use an internal object for data storage and supplies rarely needed non core
+which supplies the required cookie functionality. Not that our Cookie.pm does not
+include the C<bake()> method from L<CGI::Cookie>, for which there are easy alternatives.
+Util.pm has been recoded to use an internal object for data storage and supplies rarely needed non core
 functions and/or functions needed for the HTML side of things. Standard.pm is
 a wrapper module that supplies a complete functional interface to the OO
 back end supplied by CGI::Simple.

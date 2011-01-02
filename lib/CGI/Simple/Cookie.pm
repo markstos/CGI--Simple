@@ -27,7 +27,7 @@ sub fetch {
 
 sub parse {
   my ( $self, $raw_cookie ) = @_;
-  return () unless $raw_cookie;
+  return unless $raw_cookie;
   my %results;
   my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
